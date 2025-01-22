@@ -1,0 +1,19 @@
+{
+  "name": "jot-prices",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "keywords": ["scraper", "shopee", "price", "history"],
+  "author": "John Jerald De Chavez",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3",
+    "puppeteer": "^24.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}
