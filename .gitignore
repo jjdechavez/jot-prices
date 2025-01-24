@@ -31,10 +31,23 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
+# TypeScript build output
+dist/
+build/
+*.tsbuildinfo
+
+# TypeScript cache
+*.tsbuildinfo
+*.tscache/
+
 # IDE / Editors
 .idea/
 .vscode/
 *.swp
 *.swo
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Debug
+.node-version
+.nvmrc 
