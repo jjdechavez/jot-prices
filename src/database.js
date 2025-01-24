@@ -1,20 +1,23 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require("sqlite3").verbose();
 
 // Use DATABASE_PATH from env
-const db = new sqlite3.Database(process.env.DATABASE_PATH || 'products.db', (err) => {
+const db = new sqlite3.Database(
+  process.env.DATABASE_PATH || "products.db",
+  (err) => {
     if (err) {
-        console.error('Error connecting to database:', err);
+      console.error("Error connecting to database:", err);
     } else {
-        console.log('Connected to SQLite database');
+      console.log("Connected to SQLite database");
     }
-});
+  },
+);
 
 // Initialize database tables
 const initDatabase = () => {
-    // Products table
-    db.run(`
+  // Products table
+  db.run(`
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
@@ -23,8 +26,8 @@ const initDatabase = () => {
         )
     `);
 
-    // Price history table
-    db.run(`
+  // Price history table
+  db.run(`
         CREATE TABLE IF NOT EXISTS price_history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             product_id INTEGER,
@@ -37,36 +40,37 @@ const initDatabase = () => {
 
 // Add a product to track
 const addProduct = (name, searchQuery) => {
-    return new Promise((resolve, reject) => {
-        db.run(
-            'INSERT INTO products (name, search_query) VALUES (?, ?)',
-            [name, searchQuery],
-            function(err) {
-                if (err) reject(err);
-                else resolve(this.lastID);
-            }
-        );
-    });
+  return new Promise((resolve, reject) => {
+    db.run(
+      "INSERT INTO products (name, search_query) VALUES (?, ?)",
+      [name, searchQuery],
+      function (err) {
+        if (err) reject(err);
+        else resolve(this.lastID);
+      },
+    );
+  });
 };
 
 // Add price to history
 const addPriceHistory = (productId, price) => {
-    return new Promise((resolve, reject) => {
-        db.run(
-            'INSERT INTO price_history (product_id, price) VALUES (?, ?)',
-            [productId, price],
-            function(err) {
-                if (err) reject(err);
-                else resolve(this.lastID);
-            }
-        );
-    });
+  return new Promise((resolve, reject) => {
+    db.run(
+      "INSERT INTO price_history (product_id, price) VALUES (?, ?)",
+      [productId, price],
+      function (err) {
+        if (err) reject(err);
+        else resolve(this.lastID);
+      },
+    );
+  });
 };
 
 // Get all products with their latest prices
 const getAllProducts = () => {
-    return new Promise((resolve, reject) => {
-        db.all(`
+  return new Promise((resolve, reject) => {
+    db.all(
+      `
             SELECT 
                 p.*,
                 ph.price as current_price,
@@ -85,33 +89,36 @@ const getAllProducts = () => {
             LEFT JOIN price_history ph2 ON p.id = ph2.product_id
             GROUP BY p.id
             ORDER BY p.created_at DESC
-        `, [], (err, rows) => {
-            if (err) reject(err);
-            else resolve(rows);
-        });
-    });
+        `,
+      [],
+      (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      },
+    );
+  });
 };
 
 // Get price history for a specific product
 const getPriceHistory = (productId) => {
-    return new Promise((resolve, reject) => {
-        db.all(
-            `SELECT * FROM price_history 
+  return new Promise((resolve, reject) => {
+    db.all(
+      `SELECT * FROM price_history 
              WHERE product_id = ? 
              ORDER BY created_at DESC`,
-            [productId],
-            (err, rows) => {
-                if (err) reject(err);
-                else resolve(rows);
-            }
-        );
-    });
+      [productId],
+      (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      },
+    );
+  });
 };
 
 module.exports = {
-    initDatabase,
-    addProduct,
-    addPriceHistory,
-    getAllProducts,
-    getPriceHistory
-}; 
+  initDatabase,
+  addProduct,
+  addPriceHistory,
+  getAllProducts,
+  getPriceHistory,
+};
